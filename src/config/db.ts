@@ -1,15 +1,11 @@
 import { Sequelize } from 'sequelize-typescript';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import Budget from '../models/Budget.js';
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 export const db = new Sequelize(process.env.DATABASE_URL!, {
-    models: [__dirname + '/../models/**/*'],
+    models: [Budget], 
     logging: false,
     dialectOptions: {
         ssl: {
