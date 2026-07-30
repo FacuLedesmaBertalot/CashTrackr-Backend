@@ -14,7 +14,6 @@ export class BudgetController {
 
             res.json(budgets);
         } catch (error) {
-            //console.log(error);
             res.status(500).json({ error: 'Hubo un error' });
         }
     }
@@ -26,62 +25,21 @@ export class BudgetController {
             res.status(201).json('Presupuesto Creado Correctamente');
 
         } catch (error) {
-            //console.log(error);
             res.status(500).json({ error: 'Hubo un error' });
         }
     }
 
     static getBudgetById = async (req: Request, res: Response) => {
-        try {
-            const { id } = req.params;
-            const budget = await Budget.findByPk(Number(id));
-
-            if (!budget) {
-                const error = new Error('Presupuesto no encontrado');
-                return res.status(404).json({ error: error.message })
-            }
-            res.json(budget);
-
-        } catch (error) {
-            //console.log(error);
-            res.status(500).json({ error: 'Hubo un error' });
-        }
+        res.json(req.budget);
     }
 
     static updateById = async (req: Request, res: Response) => {
-        try {
-            const { id } = req.params;
-            const budget = await Budget.findByPk(Number(id));
-
-            if (!budget) {
-                const error = new Error('Presupuesto no encontrado');
-                return res.status(404).json({ error: error.message })
-            }
-            // Escribir los cambios del body
-            await budget.update(req.body);
-            res.json('Presupuesto actualizado correctamente');
-
-        } catch (error) {
-            //console.log(error);
-            res.status(500).json({ error: 'Hubo un error' });
-        }
+        await req.budget.update(req.body);
+        res.json('Presupuesto actualizado correctamente');
     }
 
     static deleteById = async (req: Request, res: Response) => {
-        try {
-            const { id } = req.params;
-            const budget = await Budget.findByPk(Number(id));
-
-            if (!budget) {
-                const error = new Error('Presupuesto no encontrado');
-                return res.status(404).json({ error: error.message })
-            }
-            await budget.destroy();
-            res.json('Eliminado correctamente');
-
-        } catch (error) {
-            //console.log(error);
-            res.status(500).json({ error: 'Hubo un error' });
-        }
+        await req.budget.destroy();
+        res.json('Eliminado correctamente');
     }
 }
