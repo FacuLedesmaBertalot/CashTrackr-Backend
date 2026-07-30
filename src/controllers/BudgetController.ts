@@ -32,14 +32,56 @@ export class BudgetController {
     }
 
     static getBudgetById = async (req: Request, res: Response) => {
-        console.log('Desde GET /api/budgets/id');
+        try {
+            const { id } = req.params;
+            const budget = await Budget.findByPk(Number(id));
+
+            if (!budget) {
+                const error = new Error('Presupuesto no encontrado');
+                return res.status(404).json({ error: error.message })
+            }
+            res.json(budget);
+
+        } catch (error) {
+            //console.log(error);
+            res.status(500).json({ error: 'Hubo un error' });
+        }
     }
 
     static updateById = async (req: Request, res: Response) => {
-        console.log('Desde PUT /api/budgets/id');
+        try {
+            const { id } = req.params;
+            const budget = await Budget.findByPk(Number(id));
+
+            if (!budget) {
+                const error = new Error('Presupuesto no encontrado');
+                return res.status(404).json({ error: error.message })
+            }
+            // Escribir los cambios del body
+            await budget.update(req.body);
+            res.json('Presupuesto actualizado correctamente');
+
+        } catch (error) {
+            //console.log(error);
+            res.status(500).json({ error: 'Hubo un error' });
+        }
     }
 
     static deleteById = async (req: Request, res: Response) => {
-        console.log('Desde DELETE /api/budgets/id');
+        try {
+            const { id } = req.params;
+            const budget = await Budget.findByPk(Number(id));
+
+            if (!budget) {
+                const error = new Error('Presupuesto no encontrado');
+                return res.status(404).json({ error: error.message })
+            }
+            await budget.destroy();
+            res.json('Eliminado correctamente');
+
+        } catch (error) {
+            //console.log(error);
+            res.status(500).json({ error: 'Hubo un error' });
+        }
     }
 }
