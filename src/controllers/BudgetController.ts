@@ -2,8 +2,21 @@ import type { Request, Response } from 'express';
 import Budget from '../models/Budget.js';
 
 export class BudgetController {
+
     static getAll = async (req: Request, res: Response) => {
-        console.log('Desde GET /api/budgets');
+        try {
+            const budgets = await Budget.findAll({
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                // TODO: Filtrar por el usuario autenticado
+            });
+
+            res.json(budgets);
+        } catch (error) {
+            //console.log(error);
+            res.status(500).json({ error: 'Hubo un error' });
+        }
     }
 
     static create = async (req: Request, res: Response) => {
