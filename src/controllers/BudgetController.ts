@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import Budget from '../models/Budget.js';
+import Expense from '../models/Expense.js';
 
 export class BudgetController {
 
@@ -30,7 +31,11 @@ export class BudgetController {
     }
 
     static getBudgetById = async (req: Request, res: Response) => {
-        res.json(req.budget);
+        const budget = await Budget.findByPk(req.budget.id, {
+            include: [Expense]
+        });
+
+        res.json(budget);
     }
 
     static updateById = async (req: Request, res: Response) => {
