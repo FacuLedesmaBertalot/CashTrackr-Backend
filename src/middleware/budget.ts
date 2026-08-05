@@ -25,7 +25,7 @@ export const validateBudgetId = async (req: Request, res: Response, next: NextFu
 }
 
 
-export const validateBudgetExist = async (req: Request, res: Response, next: NextFunction) => {
+export const validateBudgetExists = async (req: Request, res: Response, next: NextFunction) => {
     
     try {
         const { budgetId } = req.params;
