@@ -1,11 +1,13 @@
 import type { Request, Response } from 'express';
 import User from '../models/User.js';
+import { hashPassword } from '../utils/auth.js';
+import { generateToken } from '../utils/token.js';
 
 export class AuthController {
 
     static createAccount = async (req: Request, res: Response) => {
 
-        const { email } = req.body;
+        const { email, password } = req.body;
 
         // Prevenir duplicados
         const userExists = await User.findOne({where: { email }});
@@ -16,6 +18,8 @@ export class AuthController {
 
         try {
             const user = new User(req.body);
+            user.password = await hashPassword(password);
+            user.token = generateToken();
 
             await user.save();
             res.json('Cuenta creada correctamente');
