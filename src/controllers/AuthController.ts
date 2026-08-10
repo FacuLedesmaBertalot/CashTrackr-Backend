@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import User from '../models/User.js';
 import { hashPassword } from '../utils/auth.js';
 import { generateToken } from '../utils/token.js';
+import { AuthEmail } from '../emails/AuthEmail.js';
 
 export class AuthController {
 
@@ -22,6 +23,13 @@ export class AuthController {
             user.token = generateToken();
 
             await user.save();
+
+            await AuthEmail.sendConfirmationEmail({
+                name: user.name,
+                email: user.email,
+                token: user.token
+            })
+
             res.json('Cuenta creada correctamente');
 
         } catch (error) {
