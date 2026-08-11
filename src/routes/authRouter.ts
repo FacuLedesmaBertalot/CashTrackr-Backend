@@ -2,6 +2,7 @@ import { Router } from "express";
 import { body } from "express-validator";
 import { AuthController } from "../controllers/AuthController.js";
 import { handleInputErrors } from "../middleware/validation.js";
+import { limiter } from "../config/limiter.js";
 
 const router = Router();
 
@@ -15,6 +16,16 @@ router.post('/create-account',
     handleInputErrors,
     AuthController.createAccount
 );
+
+router.post('/confirm-account',
+    limiter,
+    body('token')
+        .notEmpty()
+        .isLength({ min: 6, max: 6 })
+        .withMessage('Token no válido'),
+    handleInputErrors,
+    AuthController.confirmAccount
+)
 
 
 export default router;
