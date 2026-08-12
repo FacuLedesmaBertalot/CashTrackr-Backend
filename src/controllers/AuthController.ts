@@ -1,8 +1,9 @@
 import type { Request, Response } from 'express';
 import User from '../models/User.js';
-import { hashPassword } from '../utils/auth.js';
+import { checkPassword, hashPassword } from '../utils/auth.js';
 import { generateToken } from '../utils/token.js';
 import { AuthEmail } from '../emails/AuthEmail.js';
+import { generateJWT } from '../utils/jwt.js';
 
 export class AuthController {
 
@@ -52,5 +53,32 @@ export class AuthController {
         await user.save();
 
         res.json('Cuenta confirmada correctamente');
+    }
+
+    static login = async (req: Request, res: Response) => {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ where: { email }});
+
+        if (!user) {
+            const error = new Error('Usuario no encontrado');
+            return res.status(404).json({ error: error.message });
+        }
+
+        if (!user.confirmed) {
+            const error = new Error('La cuenta no ha sido confirmada');
+            return res.status(403).json({ error: error.message });
+        }
+
+        const isPasswordCorrect = await checkPassword(password, user.password);
+
+        if (!isPasswordCorrect) {
+            const error = new Error('Contraseña Incorrecta');
+            return res.status(401).json({ error: error.message });
+        }
+
+        const token = generateJWT(user.id);
+
+        res.json(token);
     }
 }
