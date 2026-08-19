@@ -12,7 +12,8 @@
         "declaration": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "types": ["jest"]
+        "types": ["jest"],
+        "isolatedModules": true
     },
     "include": ["src/**/*.ts"]
 }
