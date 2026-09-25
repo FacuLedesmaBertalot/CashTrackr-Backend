@@ -8,7 +8,7 @@ jest.mock('../../../models/Budget', () => ({
 }))
 
 describe('Budget Middleware - validateBudgetExists', () => {
-    it('should hanlde non-existent budget', async () => {
+    it('should handle non-existent budget', async () => {
 
         (Budget.findByPk as jest.Mock).mockResolvedValue(null);
 
@@ -29,7 +29,7 @@ describe('Budget Middleware - validateBudgetExists', () => {
         expect(next).not.toHaveBeenCalled();
     })
 
-    it('should hanlde non-existent budget', async () => {
+    it('should handle internal serve error', async () => {
 
         (Budget.findByPk as jest.Mock).mockRejectedValue(new Error);
 
